@@ -17,7 +17,7 @@ const useResume = () => {
     isLoading: isResumeLoading,
     refetch: refetchResume,
   } = useGetResumeQuery(activeSession ?? "", {
-    skip: !activeSession, // Skip query if no ID is selected
+    skip: !activeSession, 
     refetchOnMountOrArgChange: true,
   });
   const dispatch = useAppDispatch();
@@ -44,11 +44,10 @@ const useResume = () => {
     if (activeSession) {
       response = await updateResume({ id: activeSession, resumeData: data }).unwrap();
     } else {
-      // Create new resume
       response = await createResume({ resumeData: data }).unwrap();
       if (response.success && response.resume?.id) {
         localStorage.setItem("activeSession", response.resume.id);
-        dispatch(setActiveSession(response?.resume?.id)); // Store new resume ID
+        dispatch(setActiveSession(response?.resume?.id)); 
       }
     }
   }

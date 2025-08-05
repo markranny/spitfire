@@ -27,17 +27,14 @@ declare global {
     files: File[];
   }
 
-  // Define the interface for flight data (matching your API structure)
   interface FlightData {
     [key: string]: string | undefined;
   }
 
-  // Define the interface for column mappings
   interface ColumnMappings {
     [key: string]: string;
   }
 
-  // Define the interface for the slice's state
   interface InitialStateTypes {
     activePage: string;
     flightData: FlightData[];
@@ -87,7 +84,7 @@ declare global {
     description?: string;
     category: string;
     image?: string;
-    price?: number; // Stored in cents (e.g., 4999 for $49.99)
+    price?: number; 
     level: "Beginner" | "Intermediate" | "Advanced";
     status: "Draft" | "Published";
     sections: Section[];
@@ -108,7 +105,7 @@ declare global {
     courseId: string;
     paymentProvider: "stripe";
     paymentMethodId?: string;
-    amount: number; // Stored in cents
+    amount: number; 
     savePaymentMethod?: boolean;
   }
 
@@ -260,9 +257,8 @@ declare global {
     error?: string;
   }
 
-  // Define the request parameters
   interface CreateFlightLogsParams {
-    logs: Array<Omit<InsertFlightLog, "userId">>; // userId is added server-side
+    logs: Array<Omit<InsertFlightLog, "userId">>; 
   }
 
   export enum FileType {

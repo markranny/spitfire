@@ -17,13 +17,11 @@ const useSubmissions = () => {
     const submissionId = submissionData?.submission?.id;
 
     if (submissionId) {
-      // Update existing submission
       await updateSubmission({ submission: {
         id: submissionId,
         ...data,
       }});
     } else {
-      // Create new submission
       await createSubmission({ submission: data })
     }
   }

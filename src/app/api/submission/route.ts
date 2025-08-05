@@ -1,4 +1,3 @@
-// src/app/api/submission/route.ts
 import { db } from "@/db/drizzle/db";
 import { submissions } from "@/db/drizzle/schema/submission";
 import { resumes } from "@/db/drizzle/schema/resume";
@@ -38,7 +37,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Create a new submission
 export async function POST(request: NextRequest) {
   try {
     const user = await getUser(request);
@@ -47,9 +45,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log("Received submission data:", body); // Debug log
+    console.log("Received submission data:", body); 
 
-    // Handle both nested (submission object) and flat data structures
     const submissionData = body.submission || body;
     
     const {
@@ -70,7 +67,6 @@ export async function POST(request: NextRequest) {
       selectedTemplates
     });
 
-    // Validate required fields
     if (!resumeId || resumeId.trim() === '') {
       return Response.json({ 
         success: false, 
@@ -100,7 +96,6 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      // Validate resumeId exists and belongs to the user
       const existingResume = await db.select().from(resumes).where(eq(resumes.id, resumeId)).limit(1);
       if (!existingResume.length) {
         return Response.json({ 
@@ -109,7 +104,6 @@ export async function POST(request: NextRequest) {
         }, { status: 400 });
       }
 
-      // Check if the resume belongs to the current user
       if (existingResume[0].userId !== user.id) {
         return Response.json({ 
           success: false, 
@@ -117,7 +111,6 @@ export async function POST(request: NextRequest) {
         }, { status: 403 });
       }
 
-      // Check if submission already exists for this resumeId
       const existingSubmission = await db.select().from(submissions).where(eq(submissions.resumeId, resumeId)).limit(1);
       if (existingSubmission.length > 0) {
         return Response.json({ 
@@ -129,7 +122,7 @@ export async function POST(request: NextRequest) {
       const newSubmissionData = {
         userId: user.id,
         resumeId: resumeId.trim(),
-        state: SubmissionState.NEEDS_REVIEW, // Default state for new submissions
+        state: SubmissionState.NEEDS_REVIEW, 
         name: name.trim(),
         email: email.trim(),
         airlinePreference: airlinePreference.trim(),
@@ -137,7 +130,7 @@ export async function POST(request: NextRequest) {
         selectedTemplates: selectedTemplates || [],
       };
 
-      console.log("Creating submission with data:", newSubmissionData); // Debug log
+      console.log("Creating submission with data:", newSubmissionData); 
 
       const newSubmission = await db.insert(submissions).values(newSubmissionData).returning();
 

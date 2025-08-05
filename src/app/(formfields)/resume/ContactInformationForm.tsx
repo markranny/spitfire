@@ -124,7 +124,6 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
   };
 
   const onSubmit = async (data: ContactInformationFormData) => {
-    // Check for active session - try both Redux state and localStorage
     const sessionId = activeSession || localStorage.getItem("activeSession");
     
     if (!sessionId) {
@@ -145,22 +144,18 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
     };
 
     try {
-      // Save the submission first
       await saveSubmission({
         resumeId: sessionId,
         ...saveData,
       });
 
-      // Send email notifications (don't block navigation if this fails)
       await sendEmailNotifications(saveData);
 
-      // Navigate to submissions page
       router.push("/submissions");
 
     } catch (error: any) {
-      console.error("❌ Error saving submission:", error);
+      console.error("Error saving submission:", error);
       
-      // Show specific error messages
       if (error?.data?.error) {
         toast.error("Failed to submit: " + error.data.error);
       } else if (error?.message) {
