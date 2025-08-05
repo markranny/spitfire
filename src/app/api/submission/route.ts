@@ -14,15 +14,26 @@ export async function GET(request: NextRequest) {
     if (!user) {
       return Response.json({ success: false, error: "User not found" }, { status: 401 });
     }
-    const userSubmissions = await db.select().from(submissions).leftJoin(resumes, eq(submissions.resumeId, resumes.id)).where(eq(submissions.userId, user.id));
-    return Response.json({
-      success: true,
-      submissions: userSubmissions.map(submission => ({
-        submission: submission?.submissions ?? null,
-        resume: submission?.resumes?.resumeData ? dataMapper(submission.resumes.resumeData) : null,
-      })),
-    });
+    
+    try {
+      const userSubmissions = await db.select().from(submissions).leftJoin(resumes, eq(submissions.resumeId, resumes.id)).where(eq(submissions.userId, user.id));
+      
+      return Response.json({
+        success: true,
+        submissions: userSubmissions.map(submission => ({
+          submission: submission?.submissions ?? null,
+          resume: submission?.resumes?.resumeData ? dataMapper(submission.resumes.resumeData) : null,
+        })),
+      });
+    } catch (dbError: any) {
+      console.error("Database error in GET /api/submission:", dbError);
+      return Response.json({ 
+        success: false, 
+        error: "Database error: " + (dbError.message || "Unknown database error")
+      }, { status: 500 });
+    }
   } catch (error: any) {
+    console.error("Error in GET /api/submission:", error);
     return Response.json({ success: false, error: error.message }, { status: 500 });
   }
 }
@@ -88,43 +99,61 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Validate resumeId exists
-    const existingResume = await db.select().from(resumes).where(eq(resumes.id, resumeId)).limit(1);
-    if (!existingResume.length) {
+    try {
+      // Validate resumeId exists and belongs to the user
+      const existingResume = await db.select().from(resumes).where(eq(resumes.id, resumeId)).limit(1);
+      if (!existingResume.length) {
+        return Response.json({ 
+          success: false, 
+          error: `Resume not found with ID: ${resumeId}` 
+        }, { status: 400 });
+      }
+
+      // Check if the resume belongs to the current user
+      if (existingResume[0].userId !== user.id) {
+        return Response.json({ 
+          success: false, 
+          error: "You don't have permission to submit this resume" 
+        }, { status: 403 });
+      }
+
+      // Check if submission already exists for this resumeId
+      const existingSubmission = await db.select().from(submissions).where(eq(submissions.resumeId, resumeId)).limit(1);
+      if (existingSubmission.length > 0) {
+        return Response.json({ 
+          success: false, 
+          error: "Submission already exists for this resume" 
+        }, { status: 400 });
+      }
+
+      const newSubmissionData = {
+        userId: user.id,
+        resumeId: resumeId.trim(),
+        state: SubmissionState.NEEDS_REVIEW, // Default state for new submissions
+        name: name.trim(),
+        email: email.trim(),
+        airlinePreference: airlinePreference.trim(),
+        position: position?.trim() || null,
+        selectedTemplates: selectedTemplates || [],
+      };
+
+      console.log("Creating submission with data:", newSubmissionData); // Debug log
+
+      const newSubmission = await db.insert(submissions).values(newSubmissionData).returning();
+
+      return Response.json({
+        success: true,
+        submission: newSubmission[0],
+      });
+
+    } catch (dbError: any) {
+      console.error("Database error in POST /api/submission:", dbError);
       return Response.json({ 
         success: false, 
-        error: `Resume not found with ID: ${resumeId}` 
-      }, { status: 400 });
+        error: "Database error: " + (dbError.message || "Failed to create submission")
+      }, { status: 500 });
     }
 
-    // Check if submission already exists for this resumeId
-    const existingSubmission = await db.select().from(submissions).where(eq(submissions.resumeId, resumeId)).limit(1);
-    if (existingSubmission.length > 0) {
-      return Response.json({ 
-        success: false, 
-        error: "Submission already exists for this resume" 
-      }, { status: 400 });
-    }
-
-    const newSubmissionData = {
-      userId: user.id,
-      resumeId: resumeId.trim(),
-      state: SubmissionState.NEEDS_REVIEW, // Default state for new submissions
-      name: name.trim(),
-      email: email.trim(),
-      airlinePreference: airlinePreference.trim(),
-      position: position?.trim() || null,
-      selectedTemplates: selectedTemplates || [],
-    };
-
-    console.log("Creating submission with data:", newSubmissionData); // Debug log
-
-    const newSubmission = await db.insert(submissions).values(newSubmissionData).returning();
-
-    return Response.json({
-      success: true,
-      submission: newSubmission[0],
-    });
   } catch (error: any) {
     console.error("Error creating submission:", error);
     return Response.json({ success: false, error: error.message }, { status: 500 });

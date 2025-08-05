@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import useSubmissions from "@/hooks/useSubmissions";
 import Loading from "@/components/Loading";
 import { toast } from "sonner";
+import { useAppSelector } from "@/state/redux";
 
 const availableTemplates = [
   { id: 1, name: "Template 1" },
@@ -31,6 +32,7 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
   const router = useRouter();
   const { isSaving, saveSubmission } = useSubmissions();
   const { navigateToStep, navigationStep } = useCheckoutNavigation();
+  const { activeSession } = useAppSelector((state) => state.global);
   const dialogButtonRef = useRef<HTMLButtonElement>(null);
   const [openPreview, setOpenPreview] = useState(false);
   const [activePreview, setActivePreview] = useState(1);
@@ -40,7 +42,7 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
     setActivePreview(card);
     setOpenPreview(true);
   };
-  
+
   const formatSelectedTemplates = (templates?: string[]) => {
     if (!templates || templates.length === 0) {
       return [];
@@ -56,7 +58,7 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
     }
     return newTemplates;
   };
-  
+
   const defaultData: ContactInformationFormData = {
     name: existingSubmission?.name || "",
     email: existingSubmission?.email || "",
@@ -64,14 +66,14 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
     position: existingSubmission?.position,
     selectedTemplates: formatSelectedTemplates(existingSubmission?.selectedTemplates),
   };
-  
+
   const methods: UseFormReturn<ContactInformationFormData> = useForm<ContactInformationFormData>({
     resolver: zodResolver(ContactInformationSchema),
     defaultValues: defaultData,
   });
-  
+
   const { setValue, handleSubmit, watch } = methods;
-  
+
   const handleTemplateChange = (index: number, templateId: string) => {
     const selectedTemplates = watch("selectedTemplates") || [];
     let updatedSelectedTemplates = selectedTemplates;
@@ -85,46 +87,55 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
   };
 
   const sendEmailNotifications = async (submissionData: ContactInformationFormData) => {
-  try {
-    setIsEmailSending(true);
-    
-    const selectedTemplatesList = submissionData.selectedTemplates?.filter(t => t) || [];
-    
-    // Call the API endpoint which will use the enhanced SendGrid functions
-    const emailResponse = await fetch('/api/email/send-resume-notifications', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        pilotName: submissionData.name,
-        pilotEmail: submissionData.email,
-        airline: submissionData.airlinePreference,
-        position: submissionData.position,
-        selectedTemplates: selectedTemplatesList,
-      }),
-    });
+    try {
+      setIsEmailSending(true);
+      
+      const selectedTemplatesList = submissionData.selectedTemplates?.filter(t => t) || [];
+      
+      const emailResponse = await fetch('/api/email/send-resume-notifications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pilotName: submissionData.name,
+          pilotEmail: submissionData.email,
+          airline: submissionData.airlinePreference,
+          position: submissionData.position,
+          selectedTemplates: selectedTemplatesList,
+        }),
+      });
 
-    const result = await emailResponse.json();
+      const result = await emailResponse.json();
 
-    if (result.success) {
-      toast.success('Resume submitted successfully! You will receive a confirmation email shortly.');
-    } else {
-      // Fix: Safely handle undefined result.error
-      console.error('Email notification failed:', result.error || 'Unknown error');
-      toast.warning('Resume submitted successfully, but email notifications may have failed.');
+      if (result.success) {
+        toast.success('Resume submitted successfully! You will receive a confirmation email shortly.');
+      } else {
+        console.warn('Email notification failed:', result.error || 'Unknown error');
+        toast.success('Resume submitted successfully! (Email notifications may be delayed)');
+      }
+
+    } catch (error) {
+      console.error('Error sending email notifications:', error);
+      toast.success('Resume submitted successfully! (Email notifications may be delayed)');
+    } finally {
+      setIsEmailSending(false);
     }
-
-  } catch (error) {
-    console.error('Error sending email notifications:', error);
-    toast.warning('Resume submitted successfully, but email notifications may have failed.');
-  } finally {
-    setIsEmailSending(false);
-  }
-};
+  };
 
   const onSubmit = async (data: ContactInformationFormData) => {
-    const activeSession = localStorage.getItem("activeSession");
+    // Check for active session - try both Redux state and localStorage
+    const sessionId = activeSession || localStorage.getItem("activeSession");
+    
+    if (!sessionId) {
+      toast.error("No resume session found. Please start by filling out your personal information.");
+      router.push("/resume?step=1");
+      return;
+    }
+
+    console.log("📋 Submitting contact information:", data);
+    console.log("🆔 Using session ID:", sessionId);
+
     const saveData: ContactInformationFormData = {
       name: data.name || "",
       email: data.email || "",
@@ -136,18 +147,27 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
     try {
       // Save the submission first
       await saveSubmission({
-        resumeId: activeSession || existingSubmission?.resumeId || "",
+        resumeId: sessionId,
         ...saveData,
       });
 
-      // Send email notifications after successful submission
+      // Send email notifications (don't block navigation if this fails)
       await sendEmailNotifications(saveData);
 
       // Navigate to submissions page
       router.push("/submissions");
-    } catch (error) {
-      console.error("Error saving submission:", error);
-      toast.error("Failed to submit resume. Please try again.");
+
+    } catch (error: any) {
+      console.error("❌ Error saving submission:", error);
+      
+      // Show specific error messages
+      if (error?.data?.error) {
+        toast.error("Failed to submit: " + error.data.error);
+      } else if (error?.message) {
+        toast.error("Failed to submit: " + error.message);
+      } else {
+        toast.error("Failed to submit resume. Please try again.");
+      }
     }
   };
 
@@ -253,9 +273,10 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
                 />
               )
             })}
-            </div>
+          </div>
         </form>
       </Form>
+      
       <CardModal
         card={openPreview}
         isOpen={openPreview}
@@ -264,6 +285,7 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
         activePreview={activePreview}
         handleGenerateResume={() => {}}
       />
+      
       <div className="pt-10 pb-10 flex w-full justify-between">
         <Button
           type="button"
@@ -272,19 +294,20 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
         >
           Previous
         </Button>
+        
         {isProcessing ? (
-            <div className="flex items-center gap-2">
-              <Loading />
-              <span className="text-sm text-gray-600">
-                {isSaving ? 'Saving...' : isEmailSending ? 'Sending notifications...' : 'Processing...'}
-              </span>
-            </div>
-          ) : (
-            <Button
-              type="button"
-              onClick={handleSubmit(onSubmit)}
-              className="w-fit min-w-32 px-4 py-2 bg-orange-500 hover:bg-orange-300 text-white-100 rounded-full shadow-md text-sm font-semibold mb-4 md:mb-0"
-            >
+          <div className="flex items-center gap-2">
+            <Loading />
+            <span className="text-sm text-gray-600">
+              {isSaving ? 'Saving submission...' : isEmailSending ? 'Sending notifications...' : 'Processing...'}
+            </span>
+          </div>
+        ) : (
+          <Button
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+            className="w-fit min-w-32 px-4 py-2 bg-orange-500 hover:bg-orange-300 text-white-100 rounded-full shadow-md text-sm font-semibold mb-4 md:mb-0"
+          >
             Save
           </Button>
         )}
