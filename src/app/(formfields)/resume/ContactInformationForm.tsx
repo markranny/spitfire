@@ -13,6 +13,7 @@ import { CustomFormField } from "@/components/CustomFormField";
 import { useRouter } from "next/navigation";
 import useSubmissions from "@/hooks/useSubmissions";
 import Loading from "@/components/Loading";
+import { toast } from "sonner";
 
 const availableTemplates = [
   { id: 1, name: "Template 1" },
@@ -33,11 +34,13 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
   const dialogButtonRef = useRef<HTMLButtonElement>(null);
   const [openPreview, setOpenPreview] = useState(false);
   const [activePreview, setActivePreview] = useState(1);
+  const [isEmailSending, setIsEmailSending] = useState(false);
 
   const handlePreview = (card: number) => {
     setActivePreview(card);
     setOpenPreview(true);
   };
+  
   const formatSelectedTemplates = (templates?: string[]) => {
     if (!templates || templates.length === 0) {
       return [];
@@ -53,6 +56,7 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
     }
     return newTemplates;
   };
+  
   const defaultData: ContactInformationFormData = {
     name: existingSubmission?.name || "",
     email: existingSubmission?.email || "",
@@ -60,11 +64,14 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
     position: existingSubmission?.position,
     selectedTemplates: formatSelectedTemplates(existingSubmission?.selectedTemplates),
   };
+  
   const methods: UseFormReturn<ContactInformationFormData> = useForm<ContactInformationFormData>({
     resolver: zodResolver(ContactInformationSchema),
     defaultValues: defaultData,
   });
+  
   const { setValue, handleSubmit, watch } = methods;
+  
   const handleTemplateChange = (index: number, templateId: string) => {
     const selectedTemplates = watch("selectedTemplates") || [];
     let updatedSelectedTemplates = selectedTemplates;
@@ -77,7 +84,46 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
     }
   };
 
-  const onSubmit = (data: ContactInformationFormData) => {
+  const sendEmailNotifications = async (submissionData: ContactInformationFormData) => {
+  try {
+    setIsEmailSending(true);
+    
+    const selectedTemplatesList = submissionData.selectedTemplates?.filter(t => t) || [];
+    
+    // Call the API endpoint which will use the enhanced SendGrid functions
+    const emailResponse = await fetch('/api/email/send-resume-notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        pilotName: submissionData.name,
+        pilotEmail: submissionData.email,
+        airline: submissionData.airlinePreference,
+        position: submissionData.position,
+        selectedTemplates: selectedTemplatesList,
+      }),
+    });
+
+    const result = await emailResponse.json();
+
+    if (result.success) {
+      toast.success('Resume submitted successfully! You will receive a confirmation email shortly.');
+    } else {
+      // Fix: Safely handle undefined result.error
+      console.error('Email notification failed:', result.error || 'Unknown error');
+      toast.warning('Resume submitted successfully, but email notifications may have failed.');
+    }
+
+  } catch (error) {
+    console.error('Error sending email notifications:', error);
+    toast.warning('Resume submitted successfully, but email notifications may have failed.');
+  } finally {
+    setIsEmailSending(false);
+  }
+};
+
+  const onSubmit = async (data: ContactInformationFormData) => {
     const activeSession = localStorage.getItem("activeSession");
     const saveData: ContactInformationFormData = {
       name: data.name || "",
@@ -86,15 +132,26 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
       position: data.position === "Other" ? data.otherPosition || "" : data.position || "",
       selectedTemplates: data.selectedTemplates || availableTemplates.map((template) => template.id.toString()),
     };
-    saveSubmission({
-      resumeId: activeSession || existingSubmission?.resumeId || "",
-      ...saveData,
-    }).then(() => {
+
+    try {
+      // Save the submission first
+      await saveSubmission({
+        resumeId: activeSession || existingSubmission?.resumeId || "",
+        ...saveData,
+      });
+
+      // Send email notifications after successful submission
+      await sendEmailNotifications(saveData);
+
+      // Navigate to submissions page
       router.push("/submissions");
-    }).catch((error) => {
+    } catch (error) {
       console.error("Error saving submission:", error);
-    });
+      toast.error("Failed to submit resume. Please try again.");
+    }
   };
+
+  const isProcessing = isSaving || isEmailSending;
 
   return (
     <div className="w-full h-full">
@@ -215,8 +272,13 @@ const ContactInformationForm = ({ existingSubmission }: ContactInformationFormPr
         >
           Previous
         </Button>
-        {isSaving ? (
-            <Loading />
+        {isProcessing ? (
+            <div className="flex items-center gap-2">
+              <Loading />
+              <span className="text-sm text-gray-600">
+                {isSaving ? 'Saving...' : isEmailSending ? 'Sending notifications...' : 'Processing...'}
+              </span>
+            </div>
           ) : (
             <Button
               type="button"
