@@ -227,6 +227,8 @@ interface GenerateVolunteeringResponsibilitiesResponse {
   responsibilities?: string;
 }
 
+
+
 export const api = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "api",
@@ -413,16 +415,16 @@ export const api = createApi({
       invalidatesTags: ["Resume"],
     }),
     saveSubmission: build.mutation<SaveSubmissionResponse, SaveSubmissionRequest>({
-      query: (request) => ({
-        url: "submission",
-        method: "POST",
-        body: request,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-      invalidatesTags: ["Submissions"],
-    }),
+  query: ({ submission }) => ({
+    url: "submission",
+    method: "POST",
+    body: { submission }, // Keep the nested structure as your backend expects it
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }),
+  invalidatesTags: ["Submissions"],
+}),
     getSubmissions: build.query<GetSubmissionsResponse, void>({
       query: () => ({
         url: "submission",

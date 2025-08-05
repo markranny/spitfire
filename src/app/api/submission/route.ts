@@ -1,3 +1,4 @@
+// src/app/api/submission/route.ts
 import { db } from "@/db/drizzle/db";
 import { submissions } from "@/db/drizzle/schema/submission";
 import { resumes } from "@/db/drizzle/schema/resume";
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Create a new submission
-export async function POST(request: NextRequest, ) {
+export async function POST(request: NextRequest) {
   try {
     const user = await getUser(request);
     if (!user) {
@@ -35,17 +36,88 @@ export async function POST(request: NextRequest, ) {
     }
 
     const body = await request.json();
-    const { submission } = body;
+    console.log("Received submission data:", body); // Debug log
 
-    if (!submission) {
-      return Response.json({ success: false, error: "Missing submission data" }, { status: 400 });
+    // Handle both nested (submission object) and flat data structures
+    const submissionData = body.submission || body;
+    
+    const {
+      resumeId,
+      name,
+      email,
+      airlinePreference,
+      position,
+      selectedTemplates
+    } = submissionData;
+
+    console.log("Extracted submission data:", {
+      resumeId,
+      name,
+      email,
+      airlinePreference,
+      position,
+      selectedTemplates
+    });
+
+    // Validate required fields
+    if (!resumeId || resumeId.trim() === '') {
+      return Response.json({ 
+        success: false, 
+        error: "resumeId is required and cannot be empty" 
+      }, { status: 400 });
+    }
+
+    if (!name || name.trim() === '') {
+      return Response.json({ 
+        success: false, 
+        error: "name is required and cannot be empty" 
+      }, { status: 400 });
+    }
+
+    if (!email || email.trim() === '') {
+      return Response.json({ 
+        success: false, 
+        error: "email is required and cannot be empty" 
+      }, { status: 400 });
+    }
+
+    if (!airlinePreference || airlinePreference.trim() === '') {
+      return Response.json({ 
+        success: false, 
+        error: "airlinePreference is required and cannot be empty" 
+      }, { status: 400 });
+    }
+
+    // Validate resumeId exists
+    const existingResume = await db.select().from(resumes).where(eq(resumes.id, resumeId)).limit(1);
+    if (!existingResume.length) {
+      return Response.json({ 
+        success: false, 
+        error: `Resume not found with ID: ${resumeId}` 
+      }, { status: 400 });
+    }
+
+    // Check if submission already exists for this resumeId
+    const existingSubmission = await db.select().from(submissions).where(eq(submissions.resumeId, resumeId)).limit(1);
+    if (existingSubmission.length > 0) {
+      return Response.json({ 
+        success: false, 
+        error: "Submission already exists for this resume" 
+      }, { status: 400 });
     }
 
     const newSubmissionData = {
-      ...submission,
       userId: user.id,
+      resumeId: resumeId.trim(),
       state: SubmissionState.NEEDS_REVIEW, // Default state for new submissions
+      name: name.trim(),
+      email: email.trim(),
+      airlinePreference: airlinePreference.trim(),
+      position: position?.trim() || null,
+      selectedTemplates: selectedTemplates || [],
     };
+
+    console.log("Creating submission with data:", newSubmissionData); // Debug log
 
     const newSubmission = await db.insert(submissions).values(newSubmissionData).returning();
 
@@ -54,6 +126,7 @@ export async function POST(request: NextRequest, ) {
       submission: newSubmission[0],
     });
   } catch (error: any) {
+    console.error("Error creating submission:", error);
     return Response.json({ success: false, error: error.message }, { status: 500 });
   }
 }
