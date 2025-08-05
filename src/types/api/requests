@@ -1,0 +1,219 @@
+export interface PersonalInformation {
+    first_name: string;
+    last_name: string;
+    address_line_1: string;
+    address_line_2?: string;
+    country: string;
+    city: string;
+    state: string;
+    zipcode: string;
+    phone_number: string;
+    email: string;
+    has_us_passport: boolean;
+}
+
+export interface ContactInfomration {
+  name?: string;
+  email?: string;
+  airline_preference?: string;
+  selected_templates?: string[];
+}
+
+export interface CertificatesAndRatings {
+    certificates?: string;
+    pic_sic_privileges?: string;
+    has_faa_med_cert: boolean;
+    other_med_cert?: string; // FCC Radiotelephone Operator's Permit
+}
+
+export interface FlightExperience {
+    military_sorties?: number;
+    turbine?: number;
+    pic_turbine?: number;
+    total_flight_hours?: number;
+    total_time?: number;
+    total_pic_time?: number;
+    total_sic_time?: number;
+    multi_engine?: number;
+    total_amel_asel_time?: number;
+    total_instructor_time?: number;
+    total_instrument_flight_time?: number;
+    part_121_hours?: number;
+    part_121_PIC_hours?: number;
+    part_135_hours?: number;
+    part_135_PIC_hours?: number;
+    has_flown_international: boolean;
+    flown_list_regions_countries?: string;
+    major_flight_exp?: string;
+    has_commercial_privilege: boolean;
+    commercial_privilege_exp?: string;
+    has_remote_pilot_exp: boolean;
+    has_instructor_exp: boolean;
+    night_flight_hours?: number;
+    aircraft_1?: string;
+    aircraft_1_hrs?: string;
+    aircraft_2?: string;
+    aircraft_2_hrs?: string;
+    aircraft_3?: string;
+    aircraft_3_hrs?: string;
+    aircraft_4?: string;
+    aircraft_4_hrs?: string;
+}
+
+export interface ProfessionalExperience {
+    prev_job_title: string;
+    prev_aircraft?: string;
+    prev_dates_employment?: string;
+    prev_keyrole?: string; // key responsibilities and accomplishments
+    highlight_roles_exp?: string;
+    prev_job_city?: string;
+    prev_job_state?: string;
+    prev_company?: string; // company / squadron
+}
+
+export interface FlightExperience {
+    military_sorties?: number;
+    turbine?: number;
+    pic_turbine?: number;
+    total_flight_hours?: number;
+    total_time?: number;
+    total_pic_time?: number;
+    total_sic_time?: number;
+    multi_engine?: number;
+    total_amel_asel_time?: number;
+    total_instructor_time?: number;
+    total_instrument_flight_time?: number;
+    part_121_hours?: number;
+    part_121_PIC_hours?: number;
+    part_135_hours?: number;
+    part_135_PIC_hours?: number;
+    has_flown_international: boolean;
+    flown_list_regions_countries?: string;
+    major_flight_exp?: string;
+    has_commercial_privilege: boolean;
+    commercial_privilege_exp?: string;
+    has_remote_pilot_exp: boolean;
+    has_instructor_exp: boolean;
+    night_flight_hours?: number;
+    aircraft_1?: string;
+    aircraft_2?: string;
+    aircraft_3?: string;
+    aircraft_4?: string;
+}
+
+
+export interface ProfessionalExperience {
+    prev_job_title: string;
+    prev_aircraft?: string;
+    prev_dates_employment?: string;
+    prev_keyrole?: string;
+    highlight_roles_exp?: string;
+    prev_job_city?: string;
+    prev_job_state?: string;
+    prev_company?: string;
+}
+
+export interface ProfessionalDevelopment {
+    has_completed_training: boolean;
+    has_conducted_seminars: boolean;
+    has_involved_mentorship: boolean;
+    mentorship_programs?: string;
+    initital_ground_school?: string;
+    part_121?: string;
+    simulator_training?: string;
+}
+
+export interface Education {
+    school_name: string;
+    degree: string;
+    concentration?: string;
+    minor_concentration?: string;
+    gpa?: number;
+    honors?: string;
+    add_training_1?: string;
+    add_training_2?: string;
+    add_training_3?: string;
+    college_period?: string;
+    college_city?: string;
+    college_state?: string;
+}
+
+export interface VolunteerAndLeadershipActivities {
+    has_volunteer_role: boolean;
+    is_member_aviation_grp: boolean;
+    volunteer_role?: string;
+    volunteer_responsibilities?: string;
+    volunteer_date?: string;
+    aviation_organization_1?: string;
+    aviation_organization_2?: string;
+    aviation_organization_3?: string;
+    volunteer_city?: string;
+    volunteer_state?: string;
+    volunteer_organization?: string;
+}
+
+export interface LeadershipAndTeamwork {
+    did_mentor_pilots: boolean;
+    involve_in_crm: boolean;
+    manage_flight_crew: boolean;
+    handle_conflict: boolean;
+    work_as_check_airman: boolean;
+    mentor_approach?: string;
+    contribute_team_dynamic?: string; // crew resource management contribution
+    lead_strategies?: string; // manage / lead flight crews strategies
+    checkairman_instructor_responsibilities?: string; // worked as check airman, instructor or examiner
+    conflict_resolution?: string;
+}
+
+export interface DutyDescriptionFlightOperations {
+    primary_flight_responsibilities?: string;
+    manage_flight_planning_tasks?: boolean;
+    had_oversee_flight_inspections: boolean;
+    did_ensure_compliance: boolean;
+    did_perform_op_duties: boolean;
+    flight_planning_tasks?: string;
+    oversee_flight_inspections?: string;
+    ensure_compliance_role?: string;
+    operational_duties?: string; // under part 91, 121, 135
+}
+
+export interface SkillsAndQualifications {
+    is_multi_bilingual: boolean;
+    any_technical_soft_skills: boolean;
+    languange_1?: string;
+    proficiency_level_1?: string;
+    languange_2?: string;
+    proficiency_level_2?: string;
+    languange_3?: string;
+    proficiency_level_3?: string;
+    technical_soft_skills?: string;
+}
+
+export interface EmergencyAndSafetyProcedures {
+    respond_inflight_emergencies: boolean;
+    inflight_emergencies: string;
+}
+
+export interface AdditionalInformation {
+    has_employment_gap: boolean;
+    award_date: string;
+    employment_gap?: string;
+    awards?: string;
+    recognitions?: string;
+    personal_achievements?: string;
+}
+
+export interface ResumeFields {
+    personalInformation: PersonalInformation;
+    emergencyAndSafetyProcedures?: EmergencyAndSafetyProcedures;
+    additionalInformation?: AdditionalInformation;
+    certificatesAndRatings?: CertificatesAndRatings;
+    flightExperience?: FlightExperience;
+    professionalDevelopment?: ProfessionalDevelopment;
+    professionalExperience?: ProfessionalExperience;
+    education?: Education;
+    volunteerAndLeadershipActivities?: VolunteerAndLeadershipActivities;
+    leadershipAndTeamwork?: LeadershipAndTeamwork;
+    dutyDescriptionFlightOperations?: DutyDescriptionFlightOperations;
+    skillsAndQualifications?: SkillsAndQualifications;
+}

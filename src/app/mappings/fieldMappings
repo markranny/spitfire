@@ -1,0 +1,99 @@
+
+const defaultMapping = {
+    // Personal Information
+    "Full Name": (data) => `${data.personalInformation.first_name?.toUpperCase() || ""} ${data.personalInformation.last_name?.toUpperCase() || ""}`,
+
+    // Certificates and Ratings
+    "Certificates": (data) => `Certificates: ${data.certificatesAndRatings?.certificates} | ${data.certificatesAndRatings?.pic_sic_privileges}\n${data?.certificatesAndRatings?.other_med_cert}`,
+
+    // Professional Experience
+    "Previous Date Emp": (data) => `${data.professionalExperience?.prev_dates_employment}`,
+    "Job State": (data) => `${data.professionalExperience?.prev_job_city || "N/A"}, ${data.professionalExperience?.prev_job_state || "N/A"}`,
+    "Keyrole": (data) => `${data.professionalExperience?.prev_keyrole}`,
+    "Highlight Role": (data) => `${data.professionalExperience?.highlight_roles_exp}`,
+
+    // Professional Development
+    "Professional Development": (data) => `${data.professionalDevelopment?.simulator_training || "N/A"} | ${data.professionalDevelopment?.part_121 || "N/A"}\n${data.professionalDevelopment.mentorship_programs} | ${data.professionalDevelopment.initital_ground_school}`,
+
+    // Flight Experience
+    "Total Time": (data) => `${data.flightExperience?.total_time || "0"}`,
+    "Instrument": (data) => `${data.flightExperience?.total_instrument_flight_time || "0"}`,
+    "PIC": (data) => `${data.flightExperience?.total_pic_time || "0"}`,
+    "PIC Turbine": (data) => `${data.flightExperience?.pic_turbine || "0"}`,
+    "Turbine Total": (data) => `${data.flightExperience?.turbine || "0"}`,
+    "Multi Engine": (data) => `${data.flightExperience?.multi_engine || "0"}`,
+    "Instructor": (data) => `${data.flightExperience?.total_instructor_time || "0"}`,
+    "Night": (data) => `${data.flightExperience?.night_flight_hours || "0"}`,
+    "Military Sorties": (data) => `${data.flightExperience?.military_sorties || "0"}`,
+    "Part 121 PIC": (data) => `${data.flightExperience?.part_121_PIC_hours || "0"}`,
+    "Part 121": (data) => `${data.flightExperience?.part_121_hours || "0"}`,
+    "Total SIC": (data) => `${data.flightExperience?.total_sic_time || "0"}`,
+    "Amel": (data) => `${data.flightExperience?.total_amel_asel_time || "0"}`,
+    "Aircraft 1": (data) => `${data.flightExperience?.aircraft_1_hrs || "0"}`,
+    "Aircraft 2": (data) => `${data.flightExperience?.aircraft_2_hrs || "0"}`,
+    "Aircraft 3": (data) => `${data.flightExperience?.aircraft_3_hrs || "0"}`,
+    "Aircraft 4": (data) => `${data.flightExperience?.aircraft_4_hrs || "0"}`,
+
+    // Volunteer and Leadership Activities
+    "Volunteer Org": (data) => `${data.volunteerAndLeadershipActivities?.volunteer_organization || "N/A"} - ${data.volunteerAndLeadershipActivities?.volunteer_city || "N/A"}, ${data.volunteerAndLeadershipActivities?.volunteer_state || "N/A"}`,
+    "Volunteer Role": (data) => `${data.volunteerAndLeadershipActivities?.volunteer_role || "N/A"}`,
+    "Volunteer Responsibilities": (data) => `${data.volunteerAndLeadershipActivities?.volunteer_responsibilities || "N/A"}`,
+    "Volunteer": (data) => `${data.volunteerAndLeadershipActivities?.volunteer_organization || "N/A"} - ${data.volunteerAndLeadershipActivities?.volunteer_city || "N/A"}, ${data.volunteerAndLeadershipActivities?.volunteer_state || "N/A"}\n${data.volunteerAndLeadershipActivities?.aviation_organization_1 || "N/A"} |  ${data.volunteerAndLeadershipActivities?.aviation_organization_2 || "N/A"} | ${data.volunteerAndLeadershipActivities?.aviation_organization_3 || "N/A"}`,
+    "Volunteer Date": (data) => `${data.volunteerAndLeadershipActivities?.volunteer_date || "N/A"}`,
+    // Education
+    "Education": (data) => `${data.education?.degree || "N/A"}, ${data.education?.school_name || "N/A"} - ${data.education?.gpa || "N/A"}\n${data.education?.college_city || "N/A"}, ${data.education?.college_state || "N/A"}, ${data.education?.honors || "N/A"}`,
+    "Education Date": (data) => `${data.education?.college_period || "N/A"}`
+};
+
+export const fieldMappings = {
+    "1": {
+        ...defaultMapping,
+        "Contact Info": (data) => `${data.personalInformation.phone_number || "N/A"} | ${data.personalInformation.email || "N/A"}`,
+        "Address": (data) => `${data.personalInformation.address_line_1 || "N/A"}, ${data.personalInformation.city || "N/A"}, ${data.personalInformation.state || "N/A"} ${data.personalInformation.zipcode || "N/A"}`,
+    },
+    "2": {
+        ...defaultMapping,
+        "Contact Info": (data) => `Cell Phone: ${data.personalInformation.phone_number || "N/A"}\n${data.personalInformation.email || "N/A"}`,
+        "Address": (data) => `${data.personalInformation.address_line_1 || "N/A"}\n${data.personalInformation.city || "N/A"}, ${data.personalInformation.state || "N/A"} ${data.personalInformation.zipcode || "N/A"}`,
+        "Job Information": (data) => `${data.professionalExperience?.prev_job_title || "N/A"} | ${data.professionalExperience?.prev_company || "N/A"}`,
+    },
+    "3": {
+        ...defaultMapping,
+        "Contact Info": (data) => `${data.personalInformation.address_line_1 || "N/A"}, ${data.personalInformation.city || "N/A"}, ${data.personalInformation.state || "N/A"} ${data.personalInformation.zipcode || "N/A"} | ${data.personalInformation.phone_number || "N/A"} | ${data.personalInformation.email || "N/A"}`,
+        "Job Information": (data) => `${data.professionalExperience?.prev_job_title || "N/A"} | ${data.professionalExperience?.prev_company || "N/A"}`,
+        "Commercial Privilege": (data) => `${data.flightExperience.has_commercial_priv ? data.flightExperience.commercial_privilege_exp : "N/A"}`,
+        "Airline Pilot": (data) => `${data.flightExperience.certificates || "N/A"}`,
+        "Type Ratings": (data) => `${data.flightExperience.pic_sic_privileges || "N/A"}`,
+        "Flight Instructor": (data) => `${data.flightExperience.has_instructor_exp  ? "Has Experience" : "No experience"}`,
+        "Remote Pilot": (data) => `${data.flightExperience.has_remote_pilot_exp  ? "Has Experience" : "No experience"}`,
+        "Medical": (data) => `${data.certificatesAndRatings.has_faa_med_cert ? "FAA 1st Class Medical" : ""}`,
+        "Additional Qualifications": (data) => `${data.certificatesAndRatings.other_med_cert  || "N/A"}`,
+    },
+    "4": {
+        ...defaultMapping,
+        "Contact Info": (data) => `${data.personalInformation.email || ""}\n${data.personalInformation.phone_number || ""}`,
+        "Address": (data) => `${data.personalInformation.address_line_1 || "N/A"}\n${data.personalInformation.city || "" }, ${data.personalInformation.state || ""} ${data.personalInformation.zipcode || ""}`,
+        "Job State": (data) => `Company, ${data.professionalExperience?.prev_company || "N/A"}: ${data.personalInformation.city || "N/A"}, ${data.personalInformation.state || "N/A"}`,
+        "Commercial Privilege": (data) =>`${data.flightExperience.has_commercial_priv ? data.flightExperience.commercial_privilege_exp : "N/A"}`,
+        "Part 121 PIC": (data) => `${data.flightExperience?.part_121_PIC_hours || "N/A"} hours`,
+        "Part 121": (data) => `${data.flightExperience?.part_121_hours || "N/A"} hours`,
+        "Total SIC": (data) => `${data.flightExperience?.total_pic_sic_time || "N/A"} hours`,
+        "Amel": (data) => `${data.flightExperience?.total_amel_asel_time || "N/A"} hours`,
+        "Total Time": (data) => `${data.flightExperience?.total_time || "N/A"} hours`,
+        "Turbine Total": (data) => `${data.flightExperience?.turbine || "N/A"} hours`,
+        "Certificates": (data) => `${data.certificatesAndRatings.certificates}, ${data.certificatesAndRatings.pic_sic_privileges}\n${data.certificatesAndRatings.other_med_cert}\n${data.certificatesAndRatings.has_faa_med_cert ? "FAA 1st Class Medical" : ""}`,
+   
+    },
+    "5": {
+        ...defaultMapping,
+        "Contact No": (data) => `${data.personalInformation.phone_number || "N/A"}`,
+        "Email": (data) => `${data.personalInformation.email || "N/A"}`,
+        "Address": (data) => `${data.personalInformation.address_line_1 || "N/A"}, ${data.personalInformation.city || "N/A"}, ${data.personalInformation.state || "N/A"} ${data.personalInformation.zipcode || "N/A"}`,
+        "Job State": (data) => `Company, ${data.professionalExperience?.prev_company || "N/A"}: ${data.personalInformation.city || "N/A"}, ${data.personalInformation.state || "N/A"}`,
+        "Commercial Privilege": (data) => `${data.flightExperience.has_commercial_priv ? data.flightExperience.commercial_privilege_exp : "N/A"}`,
+        "Certificates": (data) => `${data.certificatesAndRatings.certificates}, ${data.certificatesAndRatings.pic_sic_privileges}\n${data.certificatesAndRatings.other_med_cert} ${data.certificatesAndRatings.has_faa_med_cert ? ", FAA 1st Class Medical" : ""} ${data.personalInformation.has_us_passport ? ", US Passport" : ""}`,
+    }
+};
+
+
+

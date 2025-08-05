@@ -1,0 +1,153 @@
+{
+  "personalInformation": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "address_line_1": "123 Aviation Street",
+    "address_line_2": "Apt 4B",
+    "country": "USA",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipcode": "90001",
+    "phone_number": "+1-555-123-4567",
+    "email": "johndoe@example.com",
+    "has_us_passport": true
+  },
+  "certificatesAndRatings": {
+    "certificates": "ATP, CFI, CFII",
+    "pic_sic_privileges": "PIC",
+    "has_faa_med_cert": true,
+    "other_med_cert": "FCC Radiotelephone Operator's Permit"
+  },
+  "flightExperience": {
+    "military_sorties": 120,
+    "turbine": 1500,
+    "pic_turbine": 900,
+    "total_flight_hours": 3500,
+    "total_time": 3600,
+    "total_pic_sic_time": 2000,
+    "multi_engine": 1200,
+    "total_amel_asel_time": 2200,
+    "total_instructor_time": 500,
+    "total_instrument_flight_time": 700,
+    "part_121_hours": 1000,
+    "part_121_PIC_hours": 600,
+    "part_135_hours": 800,
+    "part_135_PIC_hours": 400,
+    "has_flown_international": true,
+    "flown_list_regions_countries": "Europe, Asia, South America",
+    "major_flight_exp": "Extensive international flight operations",
+    "has_commercial_privilege": true,
+    "commercial_privilege_exp": "Airline transport pilot in multiple regions",
+    "has_remote_pilot_exp": false,
+    "has_instructor_exp": true,
+    "night_flight_hours": 500,
+    "aircraft_1": "Boeing 737",
+    "aircraft_1_hrs": "1200",
+    "aircraft_2": "Airbus A320",
+    "aircraft_2_hrs": "800"
+  },
+  "professionalExperience": [
+    {
+      "prev_job_title": "Captain",
+      "prev_aircraft": "Boeing 737",
+      "prev_dates_employment": "2018 - Present",
+      "prev_keyrole": "Leading international commercial flights",
+      "highlight_roles_exp": "Trained over 50 first officers",
+      "prev_job_city": "New York",
+      "prev_job_state": "NY",
+      "prev_company": "American Airlines"
+    },
+    {
+      "prev_job_title": "First Officer",
+      "prev_aircraft": "Airbus A320",
+      "prev_dates_employment": "2014 - 2018",
+      "prev_keyrole": "Assisted in long-haul international flights",
+      "highlight_roles_exp": "Accumulated extensive transatlantic flight hours",
+      "prev_job_city": "Los Angeles",
+      "prev_job_state": "CA",
+      "prev_company": "Delta Airlines"
+    },
+    {
+      "prev_job_title": "Flight Instructor",
+      "prev_aircraft": "Cessna 172",
+      "prev_dates_employment": "2012 - 2014",
+      "prev_keyrole": "Trained student pilots",
+      "highlight_roles_exp": "Helped over 20 students obtain private pilot licenses",
+      "prev_job_city": "Daytona Beach",
+      "prev_job_state": "FL",
+      "prev_company": "Embry-Riddle Flight School"
+    },
+    {
+      "prev_job_title": "Loadmaster",
+      "prev_aircraft": "C-130 Hercules",
+      "prev_dates_employment": "2010 - 2012",
+      "prev_keyrole": "Managed aircraft loading and cargo distribution",
+      "highlight_roles_exp": "Ensured compliance with weight and balance standards",
+      "prev_job_city": "San Antonio",
+      "prev_job_state": "TX",
+      "prev_company": "U.S. Air Force"
+    }
+  ],
+  "education": {
+    "school_name": "Embry-Riddle Aeronautical University",
+    "degree": "Bachelor of Science in Aeronautics",
+    "concentration": "Aviation Safety",
+    "minor_concentration": "Flight Operations",
+    "gpa": 3.8,
+    "honors": "Cum Laude",
+    "add_training_1": "FAA Safety Management Systems Certification",
+    "add_training_2": "Advanced Avionics Training",
+    "add_training_3": "Multi-Crew Cooperation Course",
+    "college_period": "2010 - 2014",
+    "college_city": "Daytona Beach",
+    "college_state": "FL"
+  },
+  "volunteerAndLeadershipActivities": {
+    "has_volunteer_role": true,
+    "is_member_aviation_grp": true,
+    "volunteer_roles": [
+      {
+        "volunteer_organization": "Civil Air Patrol",
+        "volunteer_role": "Flight Instructor",
+        "volunteer_responsibilities": "Trained cadets in basic flight maneuvers",
+        "volunteer_date": "2019 - Present"
+      },
+      {
+        "volunteer_organization": "EAA Young Eagles",
+        "volunteer_role": "Pilot",
+        "volunteer_responsibilities": "Provided introductory flights for young aspiring pilots",
+        "volunteer_date": "2017 - Present"
+      }
+    ],
+    "aviation_organizations": [
+      {
+        "aviation_organization": "Experimental Aircraft Association",
+        "aviation_volunteer_city": "Oshkosh",
+        "aviation_volunteer_state": "WI"
+      }
+    ]
+  },
+  "skillsAndQualifications": {
+    "is_multi_bilingual": true,
+    "any_technical_soft_skills": true,
+    "languange_1": "English",
+    "proficiency_level_1": "Fluent",
+    "languange_2": "Spanish",
+    "proficiency_level_2": "Intermediate",
+    "languange_3": "French",
+    "proficiency_level_3": "Basic",
+    "technical_soft_skills": "Advanced avionics, CRM, flight planning software"
+  },
+  "emergencyAndSafetyProcedures": {
+    "respond_inflight_emergencies": true,
+    "inflight_emergencies": "Handled engine failures, medical emergencies, and severe weather diversions"
+  },
+  "additionalInformation": {
+    "has_employment_gap": false,
+    "award_date": "2021",
+    "employment_gap": "",
+    "awards": "FAA Flight Safety Award",
+    "recognitions": "Recognized for outstanding CRM contributions",
+    "personal_achievements": "Logged 5000+ safe flight hours"
+  }
+}

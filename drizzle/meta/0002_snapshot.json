@@ -1,0 +1,661 @@
+{
+  "id": "5d86c114-29d7-4c1b-be29-e48b7976eaf3",
+  "prevId": "e1d87098-a7c5-41d5-af90-a54bdc64cd72",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.aircraft_models": {
+      "name": "aircraft_models",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "model": {
+          "name": "model",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "aliases": {
+          "name": "aliases",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_fixed_wing": {
+          "name": "is_fixed_wing",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_helicopter": {
+          "name": "is_helicopter",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_single_engine": {
+          "name": "is_single_engine",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_turbine": {
+          "name": "is_turbine",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_military": {
+          "name": "is_military",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.flight_logs": {
+      "name": "flight_logs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "DATE_TIME": {
+          "name": "DATE_TIME",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "AIRCRAFT_TYPE": {
+          "name": "AIRCRAFT_TYPE",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "AIRCRAFT_ID": {
+          "name": "AIRCRAFT_ID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FROM": {
+          "name": "FROM",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ROUTE": {
+          "name": "ROUTE",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TO": {
+          "name": "TO",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "OUT": {
+          "name": "OUT",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IN": {
+          "name": "IN",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOTAL_TIME": {
+          "name": "TOTAL_TIME",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "SINGLE_ENGINE": {
+          "name": "SINGLE_ENGINE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "MULTI_ENGINE": {
+          "name": "MULTI_ENGINE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FIXED_WING": {
+          "name": "FIXED_WING",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TURBINE": {
+          "name": "TURBINE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FIXED_WING_MULTI_ENGINE": {
+          "name": "FIXED_WING_MULTI_ENGINE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FIXED_WING_TURBINE": {
+          "name": "FIXED_WING_TURBINE",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PIC": {
+          "name": "PIC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FIXED_WING_PIC": {
+          "name": "FIXED_WING_PIC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FIXED_WING_TURBINE_PIC": {
+          "name": "FIXED_WING_TURBINE_PIC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SIC": {
+          "name": "SIC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DUAL_GIVEN": {
+          "name": "DUAL_GIVEN",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "XC": {
+          "name": "XC",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NIGHT": {
+          "name": "NIGHT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NIGHT_UNAIDED": {
+          "name": "NIGHT_UNAIDED",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NVS": {
+          "name": "NVS",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NVG": {
+          "name": "NVG",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SIM_INST": {
+          "name": "SIM_INST",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DUAL_RCVD": {
+          "name": "DUAL_RCVD",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ACTUAL_INST": {
+          "name": "ACTUAL_INST",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SIMULATOR": {
+          "name": "SIMULATOR",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "INSTRUCTOR": {
+          "name": "INSTRUCTOR",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DAY_T/O": {
+          "name": "DAY_T/O",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DAY_LDG": {
+          "name": "DAY_LDG",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NIGHT_T/O": {
+          "name": "NIGHT_T/O",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NIGHT_LDG": {
+          "name": "NIGHT_LDG",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ARR": {
+          "name": "ARR",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "T&G": {
+          "name": "T&G",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "BOL": {
+          "name": "BOL",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "FCL": {
+          "name": "FCL",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SEA/LAND": {
+          "name": "SEA/LAND",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "CATAPULT": {
+          "name": "CATAPULT",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SOLO": {
+          "name": "SOLO",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DAYSYSTEM": {
+          "name": "DAYSYSTEM",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "WEATHER": {
+          "name": "WEATHER",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "HOOD": {
+          "name": "HOOD",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SES": {
+          "name": "SES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "MES": {
+          "name": "MES",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TAXI": {
+          "name": "TAXI",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "COMPLEX": {
+          "name": "COMPLEX",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "CUSTOM": {
+          "name": "CUSTOM",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TAILDRAGGER": {
+          "name": "TAILDRAGGER",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "INSTRUMENT_APPROACH": {
+          "name": "INSTRUMENT_APPROACH",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PRECISION_APPROACH": {
+          "name": "PRECISION_APPROACH",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NON_PRECISION_APPROACH": {
+          "name": "NON_PRECISION_APPROACH",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "AIRCRAFT_COMMANDER": {
+          "name": "AIRCRAFT_COMMANDER",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SPECIAL_CREW_TIME": {
+          "name": "SPECIAL_CREW_TIME",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "COMBAT_SORTIES": {
+          "name": "COMBAT_SORTIES",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SORTIES": {
+          "name": "SORTIES",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "COMBAT": {
+          "name": "COMBAT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "MISSION_COMMANDER": {
+          "name": "MISSION_COMMANDER",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "CIVILIAN_OTHER": {
+          "name": "CIVILIAN_OTHER",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TOT": {
+          "name": "TOT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "OT": {
+          "name": "OT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "OTR": {
+          "name": "OTR",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ORT": {
+          "name": "ORT",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SART": {
+          "name": "SART",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "C/S_SRT": {
+          "name": "C/S_SRT",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "HELO": {
+          "name": "HELO",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "MILITARY": {
+          "name": "MILITARY",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.resumes": {
+      "name": "resumes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resume_data": {
+          "name": "resume_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.submissions": {
+      "name": "submissions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resume_id": {
+          "name": "resume_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "airline_preference": {
+          "name": "airline_preference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "selected_templates": {
+          "name": "selected_templates",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
